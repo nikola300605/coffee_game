@@ -2,6 +2,7 @@ package org.systempro.project.cofeeGame;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.math.Vector2;
 import org.systempro.project.platformer.TestScreen;
 
 public class InputController implements InputProcessor {
@@ -44,10 +45,14 @@ public class InputController implements InputProcessor {
         }
         if(keycode == Input.Keys.A){
             game.player.keyLeft = false;
+            float x = game.player.hitbox.getVelocity().x = 0;
+            game.player.hitbox.setVelocity(new Vector2(x,game.player.hitbox.getVelocity().y));
             return true;
         }
         if(keycode == Input.Keys.D){
             game.player.keyRight = false;
+            float x = game.player.hitbox.getVelocity().x = 0;
+            game.player.hitbox.setVelocity(new Vector2(x,game.player.hitbox.getVelocity().y));
             return true;
         }
         return false;

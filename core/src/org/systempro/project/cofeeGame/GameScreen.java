@@ -48,7 +48,7 @@ public class GameScreen extends BasicScreen {
         float y = player.hitbox.getPosition().y;
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
-        camera2d.setPosition(x,y);
+        camera2d.setPosition(0,y);
         camera2d.update();
 
         Gdx.input.setInputProcessor(new InputController(this));

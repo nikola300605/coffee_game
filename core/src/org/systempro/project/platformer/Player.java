@@ -38,6 +38,7 @@ public class Player implements Collider {
     public void update(float delta){
         Vector2 speed = hitbox.getVelocity();
         if (keyLeft) speed.x = -4;
+        if(!keyLeft) speed.x = 0;
         if (keyRight) speed.x = 4;
         if(onGround)speed.x-=speed.x*0.1;
         if (keyUp && onGround) speed.y = 6;
