@@ -34,6 +34,9 @@ public class GameScreen extends BasicScreen {
         shapeRenderer = new ShapeRenderer();
 
         player = new Player(world,5, 5, 10, 20);
+        platforms = new ArrayList<>();
+        platforms.add(new Platform(world, -5, -5, 100, 50));
+
     }
 
     @Override
@@ -57,6 +60,9 @@ public class GameScreen extends BasicScreen {
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         player.draw(shapeRenderer);
+        for(Platform platform : platforms){
+            platform.hitbox.debugDraw(shapeRenderer);
+        }
         shapeRenderer.end();
     }
 }
