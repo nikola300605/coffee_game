@@ -3,8 +3,7 @@ package org.systempro.project.cofeeGame;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector2;
-import org.systempro.project.physics2d.PlazmaBody;
-import org.systempro.project.platformer.TestScreen;
+
 
 public class InputController implements InputProcessor {
 
@@ -16,7 +15,6 @@ public class InputController implements InputProcessor {
     public boolean keyDown(int keycode) {
         if(keycode == Input.Keys.W){
             game.player.keyUp = true;
-            //System.out.println(game.player.hitbox.getVelocity());
             return true;
         }
         if(keycode == Input.Keys.S){
