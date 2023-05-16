@@ -19,6 +19,30 @@ public class GameScreen extends BasicScreen {
     public ArrayList<Platform> platforms;
     public Player player;
 
+    public int screenHeight;
+
+
+    public void generateLevel(){
+        int width = 10;
+        int height = 10;
+        int sign = 0;
+        double rand = Math.random();
+        if(rand > 0.5){
+            sign = 1;
+        }
+        else{
+            sign = 0;
+        }
+        float x = (float) (Math.random() * Gdx.graphics.getWidth()) / 4;
+        if(sign == 0){
+            x = -x;
+        }
+        float y = 0;
+        float playerY = player.hitbox.body.getPosition().y;
+        Platform platform = new Platform(world, x, (float) Math.random() * Gdx.graphics.getHeight(), width, height);
+        platforms.add(platform);
+    }
+
     @Override
     public void show() {
 
@@ -35,7 +59,12 @@ public class GameScreen extends BasicScreen {
 
         player = new Player(world,5, 5, 10, 20);
         platforms = new ArrayList<>();
+        for(int i = 0; i < 15; i++){
+            generateLevel();
+        }
         platforms.add(new Platform(world, -5, -5, 100, 50));
+
+        screenHeight = Gdx.graphics.getHeight();
 
     }
 
@@ -54,12 +83,30 @@ public class GameScreen extends BasicScreen {
         camera2d.setPosition(0,y);
         camera2d.update();
 
+        if(player.hitbox.body.getPosition().y >= screenHeight){}
+
         Gdx.input.setInputProcessor(new InputController(this));
 
         shapeRenderer.setProjectionMatrix(camera2d.combined4);
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         player.draw(shapeRenderer);
+
+        if(Math.abs(player.hitbox.getPosition().x) >= (float) Gdx.graphics.getWidth() /4){
+            System.out.println(player.hitbox.body.getPosition().x);
+            float xp = player.hitbox.getPosition().x;
+            float yp = player.hitbox.getPosition().y;
+            Vector2 speed = player.hitbox.getVelocity();
+            player.teleport(-xp, yp,speed);
+
+        }
+
+        for(int i = 0; i < 100000; i++){
+            if(i % 1000 == 0){
+                //System.out.println(Math.abs(player.hitbox.getPosition().x) >= (float) Gdx.graphics.getWidth() /4);
+                //System.out.println(Gdx.graphics.getWidth()/4);
+            }
+        }
         for(Platform platform : platforms){
             platform.hitbox.debugDraw(shapeRenderer);
         }
