@@ -44,6 +44,14 @@ public class CollisionListener implements ContactListener {
 
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
+        Object o1=contact.getFixtureA().getUserData();
+        Object o2=contact.getFixtureB().getUserData();
 
+        if(o1 instanceof Collider){
+            ((Collider) o1).postSolve(contact, impulse);
+        }
+        if(o2 instanceof Collider){
+            ((Collider) o2).postSolve(contact, impulse);
+        }
     }
 }

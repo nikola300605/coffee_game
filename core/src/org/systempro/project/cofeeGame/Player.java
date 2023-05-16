@@ -9,7 +9,7 @@ import org.systempro.project.physics2d.PlazmaBody;
 public class Player implements Collider {
 
     public PlazmaBody hitbox;
-    public boolean keyUp,keyDown,keyLeft,keyRight,onGround;
+    public boolean keyUp,keyDown,keyLeft,keyRight,onGround, passThrough;
 
     public Player(PlazmaBody hitbox){
         for(Fixture fixture:hitbox.body.getFixtureList()){
@@ -20,6 +20,7 @@ public class Player implements Collider {
         keyLeft=false;
         keyUp = false;
         onGround=true;
+        passThrough = false;
         hitbox.fixtureBottom.setUserData(this);
         hitbox.sensorTop.setUserData(this);
         hitbox.fixtureCenter.setUserData(this);
@@ -68,11 +69,6 @@ public class Player implements Collider {
             onGround = true;
             System.out.println("ground");
         }
-        //if(fix1 == hitbox.sensorTop && fix2.getUserData() instanceof Platform){
-          //  for(Fixture fixture:hitbox.body.getFixtureList()){
-            //    fixture.setFriction(0);
-            //}
-        //}
     }
 
     @Override
@@ -81,9 +77,7 @@ public class Player implements Collider {
             onGround = false;
             System.out.println("air");
         }
-       // if(fix1 == hitbox.sensorTop && fix2.getUserData() instanceof Platform){
-         //   fix1.setFriction(0);
-        //}
+
     }
 
     @Override
@@ -91,13 +85,11 @@ public class Player implements Collider {
         WorldManifold worldManifold = contact.getWorldManifold();
         Fixture f1=contact.getFixtureA();
         Fixture f2=contact.getFixtureB();
-        System.out.println(f1.getUserData());
-        System.out.println(f2 == hitbox.sensorTop);
+        if(passThrough) contact.setEnabled(false);
         if(f2 == hitbox.sensorTop && f1.getUserData() instanceof Platform){
-            for(int i = 0; i < 1000; i ++){
-                contact.setEnabled(false);
-            }
-            System.out.println("contact");
+            contact.setEnabled(false);
+            passThrough = true;
+            //System.out.println("contact");
 
         }
 
@@ -105,7 +97,9 @@ public class Player implements Collider {
 
     @Override
     public void postSolve(Contact contact, ContactImpulse impulse) {
-
+        contact.setEnabled(true);
+        System.out.println("Post solve");
+        //passThrough = false;
     }
 
 }
