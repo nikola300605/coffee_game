@@ -2,8 +2,7 @@ package org.systempro.project.cofeeGame;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import org.systempro.project.physics2d.Collider;
 import org.systempro.project.physics2d.PlazmaBody;
 
@@ -22,7 +21,7 @@ public class Player implements Collider {
         keyUp = false;
         onGround=true;
         hitbox.fixtureBottom.setUserData(this);
-        hitbox.fixtureTop.setUserData(this);
+        hitbox.sensorTop.setUserData(this);
         hitbox.fixtureCenter.setUserData(this);
         hitbox.sensorBottom.setUserData(this);
         hitbox.sensorRight.setUserData(this);
@@ -57,7 +56,7 @@ public class Player implements Collider {
             fixture.setRestitution(0);
         }
         hitbox.fixtureBottom.setUserData(this);
-        hitbox.fixtureTop.setUserData(this);
+        hitbox.sensorTop.setUserData(this);
         hitbox.fixtureCenter.setUserData(this);
         hitbox.sensorBottom.setUserData(this);
         hitbox.sensorRight.setUserData(this);
@@ -69,6 +68,11 @@ public class Player implements Collider {
             onGround = true;
             System.out.println("ground");
         }
+        //if(fix1 == hitbox.sensorTop && fix2.getUserData() instanceof Platform){
+          //  for(Fixture fixture:hitbox.body.getFixtureList()){
+            //    fixture.setFriction(0);
+            //}
+        //}
     }
 
     @Override
@@ -77,5 +81,31 @@ public class Player implements Collider {
             onGround = false;
             System.out.println("air");
         }
+       // if(fix1 == hitbox.sensorTop && fix2.getUserData() instanceof Platform){
+         //   fix1.setFriction(0);
+        //}
     }
+
+    @Override
+    public void preSolve(Contact contact, Manifold oldManifold) {
+        WorldManifold worldManifold = contact.getWorldManifold();
+        Fixture f1=contact.getFixtureA();
+        Fixture f2=contact.getFixtureB();
+        System.out.println(f1.getUserData());
+        System.out.println(f2 == hitbox.sensorTop);
+        if(f2 == hitbox.sensorTop && f1.getUserData() instanceof Platform){
+            for(int i = 0; i < 1000; i ++){
+                contact.setEnabled(false);
+            }
+            System.out.println("contact");
+
+        }
+
+    }
+
+    @Override
+    public void postSolve(Contact contact, ContactImpulse impulse) {
+
+    }
+
 }

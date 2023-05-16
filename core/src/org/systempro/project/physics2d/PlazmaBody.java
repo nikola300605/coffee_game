@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.*;
 public class PlazmaBody extends PhysicsBody{
 
     public float width,height;
-    public Fixture fixtureTop,fixtureBottom,fixtureCenter;
+    public Fixture sensorTop,fixtureBottom,fixtureCenter;
     public Fixture sensorLeft, sensorRight, sensorBottom;
 
 
@@ -41,7 +41,7 @@ public class PlazmaBody extends PhysicsBody{
         fixtureDef.shape=circleShape;
 
         circleShape.setPosition(new Vector2(0,kh/SCALE));
-        fixtureTop=body.createFixture(fixtureDef);
+        sensorTop=body.createFixture(fixtureDef);
 
         circleShape.setPosition(new Vector2(0,-kh/SCALE));
 //        fixtureDef.restitution=0;

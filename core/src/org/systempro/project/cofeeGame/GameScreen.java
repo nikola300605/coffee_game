@@ -23,9 +23,9 @@ public class GameScreen extends BasicScreen {
 
 
     public void generateLevel(){
-        int width = 10;
-        int height = 10;
-        int sign = 0;
+        int width = 30;
+        int height = 5;
+        int sign;
         double rand = Math.random();
         if(rand > 0.5){
             sign = 1;
@@ -37,9 +37,8 @@ public class GameScreen extends BasicScreen {
         if(sign == 0){
             x = -x;
         }
-        float y = 0;
         float playerY = player.hitbox.body.getPosition().y;
-        Platform platform = new Platform(world, x, (float) Math.random() * Gdx.graphics.getHeight(), width, height);
+        Platform platform = new Platform(world, x - ((float) width /2), (float) Math.random() * Gdx.graphics.getHeight(), width, height);
         platforms.add(platform);
     }
 
@@ -76,14 +75,11 @@ public class GameScreen extends BasicScreen {
         player.update(delta);
 
         //update camera
-        float x = player.hitbox.getPosition().x;
         float y = player.hitbox.getPosition().y;
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
         camera2d.setPosition(0,y);
         camera2d.update();
-
-        if(player.hitbox.body.getPosition().y >= screenHeight){}
 
         Gdx.input.setInputProcessor(new InputController(this));
 
@@ -101,12 +97,6 @@ public class GameScreen extends BasicScreen {
 
         }
 
-        for(int i = 0; i < 100000; i++){
-            if(i % 1000 == 0){
-                //System.out.println(Math.abs(player.hitbox.getPosition().x) >= (float) Gdx.graphics.getWidth() /4);
-                //System.out.println(Gdx.graphics.getWidth()/4);
-            }
-        }
         for(Platform platform : platforms){
             platform.hitbox.debugDraw(shapeRenderer);
         }

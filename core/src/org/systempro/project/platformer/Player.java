@@ -2,8 +2,7 @@ package org.systempro.project.platformer;
 
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.*;
 import org.systempro.project.physics2d.Collider;
 import org.systempro.project.physics2d.PlazmaBody;
 
@@ -25,7 +24,7 @@ public class Player implements Collider {
         wallJumbingLeft=false;
         wallJumbingRight=false;
         hitbox.fixtureBottom.setUserData(this);
-        hitbox.fixtureTop.setUserData(this);
+        hitbox.sensorTop.setUserData(this);
         hitbox.fixtureCenter.setUserData(this);
         hitbox.sensorBottom.setUserData(this);
         hitbox.sensorRight.setUserData(this);
@@ -82,4 +81,20 @@ public class Player implements Collider {
             System.out.println("wall jump end");
         }
     }
+
+    @Override
+    public void preSolve(Contact contact, Manifold oldManifold) {
+        Object o1=contact.getFixtureA().getUserData();
+        Object o2=contact.getFixtureB().getUserData();
+        if(o1 == hitbox.sensorTop && o2 instanceof Platform){
+            System.out.println("Contact");
+            contact.setEnabled(false);
+        }
+    }
+
+    @Override
+    public void postSolve(Contact contact, ContactImpulse impulse) {
+
+    }
+
 }
