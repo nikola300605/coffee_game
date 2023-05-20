@@ -8,8 +8,12 @@ import com.badlogic.gdx.math.Vector2;
 public class InputController implements InputProcessor {
 
     GameScreen game;
+    float mouseX;
+    float mouseY;
     public InputController(GameScreen game){
         this.game=game;
+        float mouseX = 0;
+        float mouseY = 0;
     }
     @Override
     public boolean keyDown(int keycode) {
@@ -35,6 +39,7 @@ public class InputController implements InputProcessor {
             game.player.onGround = true;
             return true;
         }
+
         return false;
     }
 
@@ -59,6 +64,16 @@ public class InputController implements InputProcessor {
             float x = game.player.hitbox.getVelocity().x = 0;
             game.player.hitbox.setVelocity(new Vector2(x,game.player.hitbox.getVelocity().y));
             return true;
+        }
+        if(keycode == Input.Buttons.LEFT){
+            game.bullet = new Bullet(game.world, game.player.hitbox.getPosition().x, game.player.hitbox.getPosition().y + 5, 3);
+            if(mouseX > 0.0){
+                game.bullet.direction.x = 1.0F;
+            }
+            else{
+                game.bullet.direction.x = -1.0f;
+            }
+
         }
         return false;
     }
@@ -85,6 +100,8 @@ public class InputController implements InputProcessor {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
+        mouseX = screenX;
+        mouseY = screenY;
         return false;
     }
 

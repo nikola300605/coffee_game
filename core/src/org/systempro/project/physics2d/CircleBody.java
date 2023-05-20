@@ -39,4 +39,7 @@ public class CircleBody extends PhysicsBody{
     public float getRadius() {
         return r;
     }
+    public void delete() {
+        body.getWorld().destroyBody(body);
+    }
 }

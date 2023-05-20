@@ -5,10 +5,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import org.systempro.project.physics2d.Collider;
 import org.systempro.project.physics2d.PlazmaBody;
+import org.systempro.project.physics2d.RectBody;
 
 public class Player implements Collider {
 
     public PlazmaBody hitbox;
+
+    public Bullet bullet;
     public boolean keyUp,keyDown,keyLeft,keyRight,onGround, passThrough;
 
     public Player(PlazmaBody hitbox){
@@ -63,6 +66,10 @@ public class Player implements Collider {
         hitbox.sensorRight.setUserData(this);
         hitbox.sensorLeft.setUserData(this);
     }
+
+    public void shoot(World world, float delta){
+        Bullet bullet = new Bullet(world, hitbox.getPosition().x, hitbox.getPosition().y + 5, 3);
+    }
     @Override
     public void beginContact(Fixture fix1, Fixture fix2) {
         if(fix1 == hitbox.sensorBottom && fix2.getUserData() instanceof Platform){
@@ -77,6 +84,10 @@ public class Player implements Collider {
             onGround = false;
             System.out.println("air");
         }
+
+    }
+
+    public void shoot(World world, float x, float y, ShapeRenderer shapeRenderer){
 
     }
 
