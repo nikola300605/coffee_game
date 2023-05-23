@@ -52,6 +52,20 @@ public class GameScreen extends BasicScreen {
 
     }
 
+    public void restartGame(){
+        for(Platform platform : platforms){
+            platform.hitbox.delete();
+        }
+        platforms.clear();
+        lastPlatformIndex = 0;
+        Platform beginingPlatform = new Platform(world,-5,-5, 10, 20);
+        platforms.add(beginingPlatform);
+        generatePlatform(0);
+        player.teleport(5,5, new Vector2(0,0));
+        player.onGround = true;
+
+    }
+
     @Override
     public void show() {
 
@@ -87,12 +101,12 @@ public class GameScreen extends BasicScreen {
         float y = player.hitbox.getPosition().y;
         float width = Gdx.graphics.getWidth();
         float height = Gdx.graphics.getHeight();
-        camera2d.setPosition(0,y);
+        if(y > camera2d.getPosition().y){
+            camera2d.setPosition(0,y);
+        }
+
         camera2d.update();
 
-
-
-        Gdx.input.setInputProcessor(new InputController(this));
 
         shapeRenderer.setProjectionMatrix(camera2d.combined4);
 
@@ -109,6 +123,10 @@ public class GameScreen extends BasicScreen {
 
         }
 
+        if(player.hitbox.getPosition().y < camera2d.getPosition().y - (float) screenHeight /4){
+            restartGame();
+        }
+
         if(platforms.size() <= 1){
             generatePlatform(0);
         }
@@ -116,6 +134,9 @@ public class GameScreen extends BasicScreen {
             generatePlatform(platforms.get(lastPlatformIndex).hitbox.getPosition().y - 8);
             iterator++;
         }
+
+        Gdx.input.setInputProcessor(new InputController(this));
+
         //System.out.println(player.hitbox.getPosition().y);
         for(Platform platform : platforms){
             platform.hitbox.debugDraw(shapeRenderer);

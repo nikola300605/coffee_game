@@ -2,6 +2,7 @@ package org.systempro.project.camera;
 
 import com.badlogic.gdx.math.Matrix3;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 public class Camera2d {
@@ -27,6 +28,8 @@ public class Camera2d {
     public void setPosition(float x,float y){
         position.set(-x,-y,0);
     }
+
+    public Vector2 getPosition(){return new Vector2(-position.x, -position.y);}
 
     public void setRotationRad(float radians) {
         rotation=-radians/(float) Math.PI*180;

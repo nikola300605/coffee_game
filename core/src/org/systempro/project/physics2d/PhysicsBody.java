@@ -29,5 +29,8 @@ public abstract class PhysicsBody {
         body.setType(type);
         return this;
     }
+    public void delete() {
+        body.getWorld().destroyBody(body);
+    }
     public abstract void debugDraw(ShapeRenderer renderer);
 }

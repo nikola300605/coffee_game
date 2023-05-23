@@ -35,8 +35,7 @@ public class InputController implements InputProcessor {
         }
 
         if(keycode == Input.Keys.R){
-            game.player.teleport(5,5, new Vector2(0,0));
-            game.player.onGround = true;
+            game.restartGame();
             return true;
         }
 

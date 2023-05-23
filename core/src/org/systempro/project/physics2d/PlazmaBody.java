@@ -96,7 +96,5 @@ public class PlazmaBody extends PhysicsBody{
         renderer.circle(pos.x,pos.y-kh,r);
     }
 
-    public void delete() {
-        body.getWorld().destroyBody(body);
-    }
+
 }
