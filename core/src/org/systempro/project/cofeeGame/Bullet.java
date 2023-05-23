@@ -1,5 +1,6 @@
 package org.systempro.project.cofeeGame;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
@@ -11,7 +12,6 @@ import org.systempro.project.physics2d.RectBody;
 public class Bullet implements Collider {
     public CircleBody hitbox;
 
-    public Vector2 direction;
     private double _speed = 2.0;
     private boolean passThrough = false;
 
@@ -29,7 +29,7 @@ public class Bullet implements Collider {
         this(new CircleBody(world, x, y, r));
     }
 
-    public void update(float delta){
+    public void update(Vector2 direction){
         Vector2 speed = hitbox.getVelocity();
         if(direction.x < 0){
             speed.x -=  _speed;
@@ -39,6 +39,14 @@ public class Bullet implements Collider {
         }
         speed.y += _speed;
         hitbox.setVelocity(speed);
+    }
+
+    public void draw(ShapeRenderer shapeRenderer){
+        hitbox.debugDraw(shapeRenderer);
+    }
+
+    public void delete(){
+        hitbox.delete();
     }
 
     @Override

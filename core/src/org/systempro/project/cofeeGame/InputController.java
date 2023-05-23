@@ -66,13 +66,15 @@ public class InputController implements InputProcessor {
             return true;
         }
         if(keycode == Input.Buttons.LEFT){
-            game.bullet = new Bullet(game.world, game.player.hitbox.getPosition().x, game.player.hitbox.getPosition().y + 5, 3);
+            Vector2 direction = new Vector2(0,1);
             if(mouseX > 0.0){
-                game.bullet.direction.x = 1.0F;
+                direction.x = 1.0F;
             }
             else{
-                game.bullet.direction.x = -1.0f;
+                direction.x = -1.0f;
             }
+            game.player.isShooting = true;
+            return true;
 
         }
         return false;
