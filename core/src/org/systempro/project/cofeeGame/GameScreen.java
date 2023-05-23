@@ -10,7 +10,6 @@ import org.systempro.project.camera.Camera2d;
 import org.systempro.project.physics2d.CollisionListener;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 public class GameScreen extends BasicScreen {
 
@@ -20,11 +19,8 @@ public class GameScreen extends BasicScreen {
     public ArrayList<Platform> platforms;
     public Player player;
     public int screenHeight;
-    private boolean updated = true;
-    private int iterator = 0;
 
     private int lastPlatformIndex = 0;
-
 
     public int randRange(float min, float max) {
         return (int) ((Math.random() * (max - min)) + min);
@@ -34,9 +30,7 @@ public class GameScreen extends BasicScreen {
         int platformCount = 300;
         int width = 30;
         int height =5;
-        int sign;
         Vector2 position = new Vector2(0,y);
-        double rand = Math.random();
         for(int i = 0; i < platformCount; i++){
             position.y += randRange(2f,8f);
             position.x = randRange((float) -Gdx.graphics.getWidth() /4, Gdx.graphics.getWidth());
@@ -45,10 +39,6 @@ public class GameScreen extends BasicScreen {
             lastPlatformIndex++;
         }
 
-
-    }
-
-    public void shoot(World world, Vector2 direction){
 
     }
 
@@ -132,7 +122,6 @@ public class GameScreen extends BasicScreen {
         }
         else if(player.hitbox.getPosition().y > (platforms.get(lastPlatformIndex).hitbox.getPosition().y - Gdx.graphics.getHeight())){
             generatePlatform(platforms.get(lastPlatformIndex).hitbox.getPosition().y - 8);
-            iterator++;
         }
 
         Gdx.input.setInputProcessor(new InputController(this));
