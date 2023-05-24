@@ -27,10 +27,14 @@ public class InputController implements InputProcessor {
         }
         if(keycode == Input.Keys.A){
             game.player.keyLeft = true;
+            game.player.goingRight = false;
+            game.player.goingLeft = true;
             return true;
         }
         if(keycode == Input.Keys.D){
             game.player.keyRight = true;
+            game.player.goingLeft = false;
+            game.player.goingRight = true;
             return true;
         }
 

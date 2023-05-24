@@ -29,7 +29,10 @@ public class GameScreen extends BasicScreen {
     public float screenWidth;
 
     public Texture spriteSheet;
-    public Texture doodler;
+    public Texture doodlerLeft;
+    public Texture doodlerRight;
+    public Texture doodleLeftJump;
+    public Texture doodleRightJump;
     public Sprite doodleSprite;
     public TextureRegion[][] regions;
     public Sprite platform;
@@ -121,14 +124,17 @@ public class GameScreen extends BasicScreen {
 
         batch = new SpriteBatch();
         spriteSheet = new Texture("coffeeGame/game-tiles.png");
-        doodler = new Texture("coffeeGame/doodler.png");
+        doodlerLeft = new Texture("coffeeGame/Doodler_left.png");
+        doodlerRight = new Texture("coffeeGame/Doodler_right.png");
+        doodleLeftJump = new Texture("coffeeGame/Doodler_left_jump.png");
+        doodleRightJump = new Texture("coffeeGame/Doodler_right_jump.png");
         background = new Texture("coffeeGame/bck.png");
         regions = TextureRegion.split(spriteSheet,64,16);
         //platform = new Sprite(regions[0][0]);
         //platform.setPosition(10,10);
         backgroundSprite = new Sprite(background);
         backgroundSprite.setScale(2f);
-        doodleSprite = new Sprite(doodler);
+        doodleSprite = new Sprite(doodlerLeft);
         doodleSprite.setPosition(300,300);
         doodleSprite.setOrigin(0f,0f);
 
@@ -159,8 +165,32 @@ public class GameScreen extends BasicScreen {
         if(y > camera2d.getPosition().y){
             camera2d.setPosition(0,y);
         }
-
         camera2d.update();
+
+        if(!player.onGround){
+            if(player.goingLeft){
+                doodleSprite = new Sprite(doodlerLeft);
+                doodleSprite.setScale(0.5f);
+                doodleSprite.setOrigin(0f,0f);
+            }
+            else if(player.goingRight){
+                doodleSprite = new Sprite(doodlerRight);
+                doodleSprite.setScale(0.5f);
+                doodleSprite.setOrigin(0f,0f);
+            }
+        }
+        else{
+            if(player.goingLeft){
+                doodleSprite = new Sprite(doodleLeftJump);
+                doodleSprite.setScale(0.5f);
+                doodleSprite.setOrigin(0f,0f);
+            }
+            else if(player.goingRight){
+                doodleSprite = new Sprite(doodleRightJump);
+                doodleSprite.setScale(0.5f);
+                doodleSprite.setOrigin(0f,0f);
+            }
+        }
         backgroundSprite.setPosition(camera2d.getPosition().x - backgroundSprite.getWidth()/2, camera2d.getPosition().y - backgroundSprite.getHeight()/2);
 
         doodleSprite.setPosition(x - doodleSprite.getWidth()/4,y - doodleSprite.getHeight()/4);

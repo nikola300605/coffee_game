@@ -11,7 +11,7 @@ public class Player implements Collider {
     public PlazmaBody hitbox;
 
     public Bullet bullet;
-    public boolean keyUp,keyDown,keyLeft,keyRight,onGround,passThrough,isShooting;
+    public boolean keyUp,keyDown,keyLeft,keyRight,onGround,passThrough,isShooting, goingRight, goingLeft;
 
     public Player(PlazmaBody hitbox){
         for(Fixture fixture:hitbox.body.getFixtureList()){
@@ -24,6 +24,8 @@ public class Player implements Collider {
         onGround=true;
         passThrough = false;
         isShooting = false;
+        goingLeft = false;
+        goingRight = false;
         hitbox.fixtureBottom.setUserData(this);
         hitbox.sensorTop.setUserData(this);
         hitbox.fixtureCenter.setUserData(this);
