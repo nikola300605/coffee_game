@@ -47,7 +47,7 @@ public class Player implements Collider {
         if(keyUp) speed.y = 4;
         if(onGround) speed.y = 8;
         if(keyDown) speed.y = -4;
-        if(speed.y<0)speed.y-=9.81*delta;
+        if(speed.y<0)speed.y-=15*delta;
         if(isShooting){
            // Bullet bullet = new Bullet(world, hitbox.getPosition().x, hitbox.getPosition().y + 5, 3);
             //bullet.update(direction);

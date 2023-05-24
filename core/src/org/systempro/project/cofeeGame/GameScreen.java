@@ -54,13 +54,19 @@ public class GameScreen extends BasicScreen {
     }
 
     public void generatePlatform(float y){
-        int platformCount = 300;
+        int platformCount = 100;
         int width = 30;
         int height =5;
         Vector2 position = new Vector2(0,y);
         for(int i = 0; i < platformCount; i++){
-            position.y += randRange(2f,8f);
-            position.x = randRange((float) -Gdx.graphics.getWidth() /4, Gdx.graphics.getWidth());
+            position.y += randRange(20f,30f);
+            position.x = randRange((float) -100f, 100f);
+            System.out.println(position.x);
+            System.out.println(Math.abs(position.x));
+            System.out.println("\n \n \n");
+            while(Math.abs(position.x) - Math.abs(platforms.get(lastPlatformIndex).hitbox.getPosition().x) >= 50){
+                position.x = randRange((float) -100f, 100f);
+            }
             Platform platform = new Platform(world,position.x,position.y,width,height);
             platforms.add(platform);
             Sprite platformSprite = new Sprite(regions[0][0]);
@@ -238,6 +244,15 @@ public class GameScreen extends BasicScreen {
         doodleSprite.draw(batch);
         batch.end();
 
+    }
 
+    @Override
+    public void dispose() {
+        shapeRenderer.dispose();
+        batch.dispose();
+        doodlerRight.dispose();
+        doodlerLeft.dispose();
+        doodleRightJump.dispose();
+        doodleLeftJump.dispose();
     }
 }
