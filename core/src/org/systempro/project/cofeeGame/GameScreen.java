@@ -1,6 +1,10 @@
 package org.systempro.project.cofeeGame;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
@@ -10,6 +14,8 @@ import org.systempro.project.camera.Camera2d;
 import org.systempro.project.physics2d.CollisionListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class GameScreen extends BasicScreen {
 
@@ -18,7 +24,25 @@ public class GameScreen extends BasicScreen {
     public World world;
     public ArrayList<Platform> platforms;
     public Player player;
-    public int screenHeight;
+    public BottomTrigger bottomTrigger;
+    public float screenHeight;
+    public float screenWidth;
+
+    public Texture spriteSheet;
+    public Texture doodler;
+    public Sprite doodleSprite;
+    public TextureRegion[][] regions;
+    public Sprite platform;
+    public SpriteBatch batch;
+
+    public Texture background;
+    public Sprite backgroundSprite;
+
+    public ArrayList<Sprite> platformSprites;
+
+    public Map<Platform, Sprite> platformSpriteHashMap;
+
+    private int scale = 5;
 
     private int lastPlatformIndex = 0;
 
@@ -36,6 +60,11 @@ public class GameScreen extends BasicScreen {
             position.x = randRange((float) -Gdx.graphics.getWidth() /4, Gdx.graphics.getWidth());
             Platform platform = new Platform(world,position.x,position.y,width,height);
             platforms.add(platform);
+            Sprite platformSprite = new Sprite(regions[0][0]);
+            platformSprite.setScale(0.5f);
+            platformSprite.setPosition(position.x - platformSprite.getWidth()/2, position.y - platformSprite.getHeight()/2);
+            platformSpriteHashMap.put(platform,platformSprite);
+            platformSprites.add(platformSprite);
             lastPlatformIndex++;
         }
 
@@ -43,13 +72,24 @@ public class GameScreen extends BasicScreen {
     }
 
     public void restartGame(){
+        camera2d.setPosition(5,5 - screenHeight/4);
         for(Platform platform : platforms){
             platform.hitbox.delete();
         }
+        for(Sprite platformSprite : platformSprites){
+            platformSprite.getTexture().dispose();
+        }
+        platformSprites.clear();
         platforms.clear();
+        spriteSheet = new Texture("coffeeGame/game-tiles.png");
+        regions = TextureRegion.split(spriteSheet,64,16);
         lastPlatformIndex = 0;
-        Platform beginingPlatform = new Platform(world,-5,-5, 10, 20);
+        Platform beginingPlatform = new Platform(world,-5,-5, 100, 50);
         platforms.add(beginingPlatform);
+        Sprite beginingSprite = new Sprite(regions[0][0]);
+        beginingSprite.setScale(0.5f);
+        beginingSprite.setPosition(-5 - beginingSprite.getWidth()/2, -5 - beginingSprite.getHeight()/2);
+        platformSprites.add(beginingSprite);
         generatePlatform(0);
         player.teleport(5,5, new Vector2(0,0));
         player.onGround = true;
@@ -68,15 +108,39 @@ public class GameScreen extends BasicScreen {
         camera2d.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera2d.update();
 
+        screenHeight = Gdx.graphics.getHeight();
+        screenWidth = Gdx.graphics.getWidth();
+
         shapeRenderer = new ShapeRenderer();
 
         player = new Player(world,5, 5, 10, 20);
+        bottomTrigger = new BottomTrigger(world,-10f,-10f,screenWidth/4, 10f);
         platforms = new ArrayList<>();
 
         platforms.add(new Platform(world, -5, -5, 100, 50));
 
+        batch = new SpriteBatch();
+        spriteSheet = new Texture("coffeeGame/game-tiles.png");
+        doodler = new Texture("coffeeGame/doodler.png");
+        background = new Texture("coffeeGame/bck.png");
+        regions = TextureRegion.split(spriteSheet,64,16);
+        //platform = new Sprite(regions[0][0]);
+        //platform.setPosition(10,10);
+        backgroundSprite = new Sprite(background);
+        backgroundSprite.setScale(2f);
+        doodleSprite = new Sprite(doodler);
+        doodleSprite.setPosition(300,300);
+        doodleSprite.setOrigin(0f,0f);
 
-        screenHeight = Gdx.graphics.getHeight();
+        //platform.setScale(0.5f);
+        doodleSprite.setScale(0.5f);
+
+        platformSprites = new ArrayList<>();
+        platformSpriteHashMap = new HashMap<>();
+        Sprite beginningPlatform = new Sprite(regions[0][0]);
+        beginningPlatform.setScale(0.5f);
+        beginningPlatform.setPosition(-5 - beginningPlatform.getWidth()/2, -5 - beginningPlatform.getHeight()/2);
+        platformSprites.add(beginningPlatform);
 
     }
 
@@ -89,19 +153,22 @@ public class GameScreen extends BasicScreen {
 
         //update camera
         float y = player.hitbox.getPosition().y;
-        float width = Gdx.graphics.getWidth();
-        float height = Gdx.graphics.getHeight();
+        float x = player.hitbox.getPosition().x;
+        float width = player.hitbox.width;
+        float height = player.hitbox.height;
         if(y > camera2d.getPosition().y){
             camera2d.setPosition(0,y);
         }
 
         camera2d.update();
+        backgroundSprite.setPosition(camera2d.getPosition().x - backgroundSprite.getWidth()/2, camera2d.getPosition().y - backgroundSprite.getHeight()/2);
 
+        doodleSprite.setPosition(x - doodleSprite.getWidth()/4,y - doodleSprite.getHeight()/4);
 
         shapeRenderer.setProjectionMatrix(camera2d.combined4);
 
         shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-        player.draw(shapeRenderer);
+        //player.draw(shapeRenderer);
 
 
         if(Math.abs(player.hitbox.getPosition().x) >= (float) Gdx.graphics.getWidth() /4){
@@ -128,8 +195,19 @@ public class GameScreen extends BasicScreen {
 
         //System.out.println(player.hitbox.getPosition().y);
         for(Platform platform : platforms){
-            platform.hitbox.debugDraw(shapeRenderer);
+            //platform.hitbox.debugDraw(shapeRenderer);
         }
         shapeRenderer.end();
+
+        batch.begin();
+        batch.setProjectionMatrix(camera2d.combined4);
+        backgroundSprite.draw(batch);
+        for(Sprite platformSprite : platformSprites){
+            platformSprite.draw(batch);
+        }
+        doodleSprite.draw(batch);
+        batch.end();
+
+
     }
 }
